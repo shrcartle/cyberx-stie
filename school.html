@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=0">
+    <title>Личный кабинет - МБОУ "Ребрихинская СОШ"</title>
+    <!-- Подключаем шрифты и стили как на оригинальном сайте -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        /* --- Копируем основные стили с сайта школы --- */
+        :root {
+            --bs-blue: #0d6efd;
+            --bs-primary: #273350;
+            --bs-primary-dark: #1c253d;
+            --bs-secondary: #eef2f7;
+            --bs-accent: #FF9902;
+            --bs-gray-light: #f8f9fa;
+            --bs-gray: #6c757d;
+            --bs-border-radius: 0.75rem;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            background-color: var(--bs-secondary);
+            color: var(--bs-primary);
+            line-height: 1.5;
+        }
+
+        /* Шапка как на сайте */
+        .gw-header {
+            background: #fff;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.05);
+            padding: 1rem 0;
+            margin-bottom: 2rem;
+        }
+        .gw-header__logo img {
+            max-height: 60px;
+        }
+        .gw-header__title {
+            font-weight: 800;
+            font-size: 1.25rem;
+            line-height: 1.2;
+            color: var(--bs-primary);
+        }
+        .gw-header__subtitle {
+            font-size: 0.8rem;
+            color: var(--bs-gray);
+        }
+
+        /* Карточки и блоки */
+        .gw-card {
+            background: #fff;
+            border-radius: var(--bs-border-radius);
+            box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: none;
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .gw-card:hover {
+            box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.1);
+        }
+        .card-header-custom {
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid var(--bs-accent);
+            display: inline-block;
+        }
+
+        /* Кнопки и элементы управления */
+        .btn-school {
+            background-color: var(--bs-primary);
+            color: white;
+            border-radius: 2rem;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+            border: none;
+            transition: all 0.2s;
+        }
+        .btn-school:hover {
+            background-color: var(--bs-primary-dark);
+            transform: translateY(-2px);
+        }
+        .btn-outline-school {
+            background: transparent;
+            border: 1px solid var(--bs-primary);
+            color: var(--bs-primary);
+            border-radius: 2rem;
+            padding: 0.5rem 1.5rem;
+            font-weight: 600;
+        }
+        .btn-outline-school.active {
+            background-color: var(--bs-primary);
+            color: white;
+        }
+        
+        /* Расписание */
+        .schedule-day-btn {
+            background: var(--bs-gray-light);
+            border: none;
+            border-radius: 2rem;
+            padding: 0.5rem 1.25rem;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        .schedule-day-btn.active {
+            background: var(--bs-primary);
+            color: white;
+        }
+        .lesson-item {
+            padding: 0.75rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .lesson-time {
+            font-weight: 600;
+            color: var(--bs-accent);
+            min-width: 80px;
+        }
+        .lesson-name {
+            flex-grow: 1;
+            padding-left: 1rem;
+            font-weight: 500;
+        }
+        .lesson-room {
+            color: var(--bs-gray);
+            font-size: 0.85rem;
+        }
+        
+        /* Домашнее задание */
+        .homework-item {
+            background: var(--bs-gray-light);
+            border-radius: 1rem;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+        .homework-subject {
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+        .homework-text {
+            font-size: 0.9rem;
+            color: #444;
+            margin-bottom: 0.5rem;
+        }
+        .homework-status {
+            font-size: 0.8rem;
+            cursor: pointer;
+            color: var(--bs-accent);
+            font-weight: 600;
+        }
+        .homework-status.completed {
+            color: #28a745;
+            text-decoration: line-through;
+        }
+        
+        /* Оценки */
+        .grade-badge {
+            display: inline-block;
+            background: var(--bs-primary);
+            color: white;
+            border-radius: 2rem;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        .grade-badge.good {
+            background: #28a745;
+        }
+        .grade-badge.average {
+            background: var(--bs-accent);
+        }
+        
+        /* Переключатель пользователя */
+        .user-switch {
+            background: var(--bs-gray-light);
+            border-radius: 3rem;
+            padding: 0.25rem;
+            display: inline-flex;
+        }
+        .user-switch .user-option {
+            padding: 0.5rem 1.5rem;
+            border-radius: 2rem;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+        .user-switch .user-option.active {
+            background: var(--bs-primary);
+            color: white;
+        }
+        
+        /* Модальное окно */
+        .modal-school .modal-content {
+            border-radius: var(--bs-border-radius);
+            border: none;
+        }
+        .modal-school .modal-header {
+            border-bottom: 2px solid var(--bs-accent);
+        }
+        
+        footer {
+            background: var(--bs-primary);
+            color: white;
+            padding: 2rem 0;
+            margin-top: 3rem;
+        }
+        
+        @media (max-width: 768px) {
+            .gw-card {
+                padding: 1rem;
+            }
+            .lesson-item {
+                flex-wrap: wrap;
+            }
+            .lesson-time {
+                width: 100%;
+                margin-bottom: 0.25rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+<!-- Header как на сайте школы -->
+<header class="gw-header">
+    <div class="container">
+        <div class="d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-3">
+                <div class="gw-header__logo">
+                    <img src="img/school.jpg" alt="Логотип школы">
+                </div>
+                <div>
+                    <div class="gw-header__title">МБОУ "Ребрихинская СОШ"</div>
+                    <div class="gw-header__subtitle">с.Ребриха Ребрихинского района Алтайского края</div>
+                </div>
+            </div>
+            <div class="d-none d-md-block">
+                <img src="https://media.gosweb.gosuslugi.ru/gwb/god-edinstva-2026-school_medium.png" style="height: 50px;" alt="Год единства">
+            </div>
+        </div>
+    </div>
+</header>
+
+<main class="container py-3">
+    <!-- Приветствие и переключатель пользователя -->
+    <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center mb-4">
+        <div>
+            <h1 class="display-6 fw-bold" id="greetingText">Личный кабинет</h1>
+            <p class="text-muted" id="userRoleDesc">Управление учебным процессом, расписание и домашние задания</p>
+        </div>
+        <div class="mt-3 mt-md-0">
+            <div class="user-switch" id="userSwitch">
+                <div class="user-option" data-role="student">👨‍🎓 Ученик</div>
+                <div class="user-option" data-role="parent">👪 Родитель</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Левая колонка: Расписание -->
+        <div class="col-lg-7">
+            <div class="gw-card">
+                <div class="d-flex justify-content-between align-items-center flex-wrap mb-3">
+                    <h3 class="card-header-custom mb-0">📅 Расписание уроков</h3>
+                    <div class="mt-2 mt-sm-0" id="weekDaysContainer">
+                        <!-- Кнопки дней недели будут добавлены через JS -->
+                    </div>
+                </div>
+                <div id="scheduleContent">
+                    <!-- Содержимое расписания загружается через JS -->
+                    <div class="text-center py-4">Загрузка расписания...</div>
+                </div>
+            </div>
+
+            <!-- Домашнее задание -->
+            <div class="gw-card">
+                <h3 class="card-header-custom">📚 Домашнее задание</h3>
+                <div id="homeworkContent">
+                    <div class="text-center py-4">Выберите день в расписании, чтобы увидеть ДЗ</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Правая колонка: Успеваемость и профиль -->
+        <div class="col-lg-5">
+            <!-- Виджет успеваемости -->
+            <div class="gw-card">
+                <h3 class="card-header-custom">📈 Успеваемость</h3>
+                <div class="mb-3">
+                    <div class="d-flex justify-content-between align-items-baseline">
+                        <span class="fw-semibold">Средний балл:</span>
+                        <span class="fs-2 fw-bold text-primary" id="avgGrade">4.6</span>
+                    </div>
+                    <div class="progress mt-2" style="height: 10px;">
+                        <div id="avgGradeProgress" class="progress-bar bg-warning" style="width: 85%;" role="progressbar"></div>
+                    </div>
+                </div>
+                <h5 class="fw-semibold mb-3">Последние оценки</h5>
+                <div id="recentGradesContainer">
+                    <!-- Динамическая загрузка оценок -->
+                </div>
+                <button class="btn btn-outline-school w-100 mt-3" id="showAllGradesBtn">📊 Посмотреть все оценки</button>
+            </div>
+
+            <!-- Информация о пользователе -->
+            <div class="gw-card">
+                <h3 class="card-header-custom">👤 Информация</h3>
+                <div id="userProfileInfo">
+                    <div class="mb-2"><strong>ФИО:</strong> <span id="userName">Иванов Иван Иванович</span></div>
+                    <div class="mb-2"><strong>Класс:</strong> <span id="userClass">9 "А"</span></div>
+                    <div class="mb-2"><strong>Классный руководитель:</strong> <span id="userTeacher">Сыркин Илья Евгеньевич</span></div>
+                    <div class="mb-2"><strong>Электронный дневник:</strong> <span class="badge bg-success">Активен</span></div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Модальное окно для всех оценок -->
+<div class="modal fade modal-school" id="gradesModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title fw-bold">📋 Все оценки</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body" id="gradesModalBody">
+                <!-- Контент из JS -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<footer>
+    <div class="container text-center">
+        <p>© 2026 МБОУ "Ребрихинская СОШ" | Официальный сайт</p>
+        <p class="small">Версия для слабовидящих доступна в шапке сайта</p>
+    </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // --- МОДЕЛЬ ДАННЫХ (как в пп 03, но для школы) ---
+    // Состояние приложения
+    let state = {
+        currentUser: 'student', // 'student' or 'parent'
+        currentDay: 'monday',   // текущий выбранный день
+        homeworkCompleted: JSON.parse(localStorage.getItem('homeworkCompleted')) || {
+            monday: [false, false],
+            tuesday: [false, false],
+            wednesday: [false, false],
+            thursday: [false, false],
+            friday: [false, false]
+        }
+    };
+
+    // Данные пользователей
+    const usersData = {
+        student: {
+            name: 'Иванов Иван Иванович',
+            class: '9 "А"',
+            teacher: 'Сыркин Илья Евгеньевич',
+            greeting: 'Привет, Иван!',
+            roleDesc: 'Ученик 9А класса'
+        },
+        parent: {
+            name: 'Иванова Елена Петровна',
+            class: 'Родитель ученика 9А класса',
+            teacher: 'Сыркин Илья Евгеньевич',
+            greeting: 'Здравствуйте, Елена Петровна!',
+            roleDesc: 'Родительский контроль'
+        }
+    };
+
+    // Данные расписания
+    const scheduleData = {
+        monday: [
+            { time: '08:30 - 09:15', subject: 'Русский язык', room: 'каб. 12', teacher: 'Тагиева Н.И.' },
+            { time: '09:25 - 10:10', subject: 'Алгебра', room: 'каб. 24', teacher: 'Калинина Н.А.' },
+            { time: '10:20 - 11:05', subject: 'История', room: 'каб. 15', teacher: 'Маслова Е.А.' },
+            { time: '11:15 - 12:00', subject: 'Физика', room: 'каб. 31', teacher: 'Нагих С.В.' }
+        ],
+        tuesday: [
+            { time: '08:30 - 09:15', subject: 'Геометрия', room: 'каб. 24', teacher: 'Калинина Н.А.' },
+            { time: '09:25 - 10:10', subject: 'Литература', room: 'каб. 12', teacher: 'Тагиева Н.И.' },
+            { time: '10:20 - 11:05', subject: 'Английский язык', room: 'каб. 18', teacher: 'Чуракова С.Н.' },
+            { time: '11:15 - 12:00', subject: 'Химия', room: 'каб. 28', teacher: 'Небользина М.А.' }
+        ],
+        wednesday: [
+            { time: '08:30 - 09:15', subject: 'Информатика', room: 'каб. 7', teacher: 'Бочарова М.А.' },
+            { time: '09:25 - 10:10', subject: 'Русский язык', room: 'каб. 12', teacher: 'Тагиева Н.И.' },
+            { time: '10:20 - 11:05', subject: 'Биология', room: 'каб. 29', teacher: 'Шабунина С.С.' },
+            { time: '11:15 - 12:00', subject: 'Обществознание', room: 'каб. 15', teacher: 'Маслова Е.А.' }
+        ],
+        thursday: [
+            { time: '08:30 - 09:15', subject: 'Алгебра', room: 'каб. 24', teacher: 'Калинина Н.А.' },
+            { time: '09:25 - 10:10', subject: 'Физика', room: 'каб. 31', teacher: 'Нагих С.В.' },
+            { time: '10:20 - 11:05', subject: 'География', room: 'каб. 17', teacher: 'Нагель В.П.' },
+            { time: '11:15 - 12:00', subject: 'ОБЗР', room: 'каб. 5', teacher: 'Кудряшов Е.А.' }
+        ],
+        friday: [
+            { time: '08:30 - 09:15', subject: 'Литература', room: 'каб. 12', teacher: 'Тагиева Н.И.' },
+            { time: '09:25 - 10:10', subject: 'История', room: 'каб. 15', teacher: 'Маслова Е.А.' },
+            { time: '10:20 - 11:05', subject: 'Физкультура', room: 'спортзал', teacher: 'Коновалов В.Г.' },
+            { time: '11:15 - 12:00', subject: 'Английский язык', room: 'каб. 18', teacher: 'Чуракова С.Н.' }
+        ]
+    };
+
+    // Данные домашнего задания (для каждого дня - список заданий)
+    const homeworkData = {
+        monday: [
+            { subject: 'Русский язык', text: '§15, упражнение 120 (стр. 78). Подготовиться к словарному диктанту.', completed: false },
+            { subject: 'Алгебра', text: '№ 345, 346, 348. Повторить формулы сокращенного умножения.', completed: false }
+        ],
+        tuesday: [
+            { subject: 'Геометрия', text: 'Доказать теорему Пифагора. Решить задачи № 12, 15 на стр. 101.', completed: false },
+            { subject: 'Литература', text: 'Прочитать главу "Сон Обломова". Ответить на вопросы после текста.', completed: false }
+        ],
+        wednesday: [
+            { subject: 'Информатика', text: 'Создать презентацию на тему "Алгоритмы". Задание в Google Классе.', completed: false },
+            { subject: 'Русский язык', text: 'Написать сочинение-рассуждение на тему "Что такое счастье?" (150 слов).', completed: false }
+        ],
+        thursday: [
+            { subject: 'Алгебра', text: 'Контрольная работа №3. Повторить темы: квадратные уравнения.', completed: false },
+            { subject: 'Физика', text: '§22, ответить на вопросы устно. Задачи на расчет давления.', completed: false }
+        ],
+        friday: [
+            { subject: 'Литература', text: 'Выучить стихотворение наизусть (по выбору).', completed: false },
+            { subject: 'История', text: 'Подготовить доклад о культуре XIX века (10-15 предложений).', completed: false }
+        ]
+    };
+
+    // Данные об оценках
+    const gradesData = {
+        avg: 4.6,
+        recent: [
+            { subject: 'Русский язык', grade: 5, date: '12.03' },
+            { subject: 'Алгебра', grade: 4, date: '12.03' },
+            { subject: 'Физика', grade: 5, date: '11.03' },
+            { subject: 'Английский', grade: 3, date: '11.03' },
+            { subject: 'История', grade: 4, date: '10.03' }
+        ],
+        all: {
+            'Русский язык': [5, 4, 5, 4, 5, 4],
+            'Алгебра': [4, 4, 5, 3, 4, 5],
+            'Физика': [5, 5, 4, 5, 5],
+            'Английский': [4, 3, 4, 3, 4],
+            'История': [5, 4, 5, 4, 5],
+            'Геометрия': [4, 3, 4, 4],
+            'Химия': [5, 5, 4]
+        }
+    };
+
+    // --- ФУНКЦИИ УПРАВЛЕНИЯ (аналогично пп 03) ---
+    function saveState() {
+        localStorage.setItem('currentUser', state.currentUser);
+        localStorage.setItem('homeworkCompleted', JSON.stringify(state.homeworkCompleted));
+    }
+
+    function loadState() {
+        const savedUser = localStorage.getItem('currentUser');
+        if (savedUser === 'student' || savedUser === 'parent') state.currentUser = savedUser;
+        const savedHomework = localStorage.getItem('homeworkCompleted');
+        if (savedHomework) state.homeworkCompleted = JSON.parse(savedHomework);
+        
+        // Применяем сохраненные статусы к homeworkData
+        for (const day in state.homeworkCompleted) {
+            if (homeworkData[day]) {
+                homeworkData[day].forEach((item, idx) => {
+                    if (state.homeworkCompleted[day][idx] !== undefined) {
+                        item.completed = state.homeworkCompleted[day][idx];
+                    }
+                });
+            }
+        }
+    }
+
+    // Обновить интерфейс
+    function updateUI() {
+        updateUserProfile();
+        renderWeekDays();
+        renderSchedule();
+        renderHomework();
+        renderGrades();
+    }
+
+    function updateUserProfile() {
+        const user = usersData[state.currentUser];
+        document.getElementById('greetingText').innerText = user.greeting;
+        document.getElementById('userRoleDesc').innerText = user.roleDesc;
+        document.getElementById('userName').innerText = user.name;
+        document.getElementById('userClass').innerText = user.class;
+        document.getElementById('userTeacher').innerText = user.teacher;
+        
+        // Активный класс для переключателя
+        document.querySelectorAll('.user-option').forEach(opt => {
+            if (opt.dataset.role === state.currentUser) opt.classList.add('active');
+            else opt.classList.remove('active');
+        });
+    }
+
+    function renderWeekDays() {
+        const days = [
+            { id: 'monday', name: 'ПН' },
+            { id: 'tuesday', name: 'ВТ' },
+            { id: 'wednesday', name: 'СР' },
+            { id: 'thursday', name: 'ЧТ' },
+            { id: 'friday', name: 'ПТ' }
+        ];
+        const container = document.getElementById('weekDaysContainer');
+        container.innerHTML = days.map(day => `
+            <button class="schedule-day-btn me-2 mb-2 ${state.currentDay === day.id ? 'active' : ''}" data-day="${day.id}">
+                ${day.name}
+            </button>
+        `).join('');
+        
+        document.querySelectorAll('.schedule-day-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                state.currentDay = btn.dataset.day;
+                renderWeekDays();
+                renderSchedule();
+                renderHomework();
+            });
+        });
+    }
+
+    function renderSchedule() {
+        const schedule = scheduleData[state.currentDay];
+        const container = document.getElementById('scheduleContent');
+        if (!schedule) return;
+        
+        container.innerHTML = schedule.map(lesson => `
+            <div class="lesson-item">
+                <div class="lesson-time">${lesson.time}</div>
+                <div class="lesson-name">${lesson.subject}</div>
+                <div class="lesson-room">${lesson.room} | ${lesson.teacher}</div>
+            </div>
+        `).join('');
+    }
+
+    function renderHomework() {
+        const homework = homeworkData[state.currentDay];
+        const container = document.getElementById('homeworkContent');
+        if (!homework) return;
+        
+        container.innerHTML = homework.map((hw, idx) => `
+            <div class="homework-item">
+                <div class="homework-subject">📖 ${hw.subject}</div>
+                <div class="homework-text">${hw.text}</div>
+                <div class="homework-status ${hw.completed ? 'completed' : ''}" data-day="${state.currentDay}" data-index="${idx}">
+                    ${hw.completed ? '✓ Выполнено' : '○ Отметить как выполненное'}
+                </div>
+            </div>
+        `).join('');
+        
+        // Добавляем обработчики для статусов
+        document.querySelectorAll('.homework-status').forEach(el => {
+            el.addEventListener('click', (e) => {
+                const day = el.dataset.day;
+                const idx = parseInt(el.dataset.index);
+                if (!isNaN(idx) && homeworkData[day] && homeworkData[day][idx]) {
+                    homeworkData[day][idx].completed = !homeworkData[day][idx].completed;
+                    if (!state.homeworkCompleted[day]) state.homeworkCompleted[day] = [];
+                    state.homeworkCompleted[day][idx] = homeworkData[day][idx].completed;
+                    saveState();
+                    renderHomework(); // Перерисовываем
+                    showNotification(`Задание по ${homeworkData[day][idx].subject} отмечено как ${homeworkData[day][idx].completed ? 'выполненное' : 'невыполненное'}`, 'success');
+                }
+            });
+        });
+    }
+
+    function renderGrades() {
+        const container = document.getElementById('recentGradesContainer');
+        container.innerHTML = gradesData.recent.map(g => `
+            <div class="d-flex justify-content-between align-items-center mb-2">
+                <span>${g.subject}</span>
+                <span class="grade-badge ${g.grade >= 4 ? 'good' : (g.grade === 3 ? 'average' : '')}">${g.grade}</span>
+            </div>
+        `).join('');
+        document.getElementById('avgGrade').innerText = gradesData.avg;
+        const progressPercent = (gradesData.avg / 5) * 100;
+        document.getElementById('avgGradeProgress').style.width = `${progressPercent}%`;
+    }
+
+    function showAllGrades() {
+        const modalBody = document.getElementById('gradesModalBody');
+        let html = '';
+        for (const [subject, grades] of Object.entries(gradesData.all)) {
+            html += `<div class="mb-3"><strong>${subject}:</strong> `;
+            grades.forEach(g => {
+                let gradeClass = g >= 4 ? 'good' : (g === 3 ? 'average' : '');
+                html += `<span class="grade-badge ${gradeClass}">${g}</span> `;
+            });
+            html += `</div>`;
+        }
+        modalBody.innerHTML = html;
+        const modal = new bootstrap.Modal(document.getElementById('gradesModal'));
+        modal.show();
+    }
+
+    // Система уведомлений (как в примере)
+    let notificationTimeout;
+    function showNotification(text, type = 'success') {
+        const existing = document.querySelector('.floating-notification');
+        if (existing) existing.remove();
+        const div = document.createElement('div');
+        div.className = 'floating-notification';
+        div.style.position = 'fixed';
+        div.style.bottom = '20px';
+        div.style.right = '20px';
+        div.style.backgroundColor = type === 'error' ? '#dc3545' : '#28a745';
+        div.style.color = 'white';
+        div.style.padding = '12px 24px';
+        div.style.borderRadius = '2rem';
+        div.style.fontWeight = '500';
+        div.style.zIndex = '9999';
+        div.style.boxShadow = '0 4px 15px rgba(0,0,0,0.2)';
+        div.style.fontSize = '0.9rem';
+        div.textContent = text;
+        document.body.appendChild(div);
+        clearTimeout(notificationTimeout);
+        notificationTimeout = setTimeout(() => {
+            div.style.opacity = '0';
+            setTimeout(() => div.remove(), 300);
+        }, 3000);
+    }
+
+    // Переключение пользователя
+    function initUserSwitch() {
+        document.querySelectorAll('.user-option').forEach(opt => {
+            opt.addEventListener('click', () => {
+                const role = opt.dataset.role;
+                if (role === 'student' || role === 'parent') {
+                    state.currentUser = role;
+                    saveState();
+                    updateUI();
+                    showNotification(`Режим "${role === 'student' ? 'Ученика' : 'Родителя'}" активирован`, 'success');
+                }
+            });
+        });
+    }
+
+    // Инициализация и загрузка сохраненного состояния
+    loadState();
+    // Применяем статусы выполнения к homeworkData
+    for (const day in state.homeworkCompleted) {
+        if (homeworkData[day]) {
+            homeworkData[day].forEach((item, idx) => {
+                if (state.homeworkCompleted[day][idx] !== undefined) {
+                    item.completed = state.homeworkCompleted[day][idx];
+                }
+            });
+        }
+    }
+    updateUI();
+    initUserSwitch();
+    document.getElementById('showAllGradesBtn').addEventListener('click', showAllGrades);
+    
+    // Начальное сохранение структуры homeworkCompleted в localStorage, если её нет
+    if (!localStorage.getItem('homeworkCompleted')) {
+        const initialCompleted = {};
+        for (const day in homeworkData) {
+            initialCompleted[day] = homeworkData[day].map(() => false);
+        }
+        localStorage.setItem('homeworkCompleted', JSON.stringify(initialCompleted));
+        state.homeworkCompleted = initialCompleted;
+    }
+</script>
+</body>
+</html>
